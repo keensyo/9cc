@@ -170,7 +170,7 @@ Node *expr() {
     Node *node = mul();
 
     for (;;) {
-        if (consume("+"))
+        if (consume('+'))
           node = new_binary(ND_ADD, node, mul());
         else if (consume('-'))
           node = new_binary(ND_SUB, node, mul());
@@ -210,7 +210,6 @@ void gen(Node *node) {
     printf("  push %d\n", node->val);
     return;
   }
-}
 
 gen(node->lhs);
 gen(node->rhs);
@@ -237,10 +236,9 @@ case ND_DIV:
 printf("  push rax\n");
 }
 
-
 int main(int argc, char **argv) {
     if (argc != 2)
-      error("引数の個数が正しくありません");
+      error("%s: 引数の個数が正しくありません", argv[0]);
       return 1;
 
     // トークナイズしてパースする
@@ -248,6 +246,7 @@ int main(int argc, char **argv) {
     token = tokenize();
     Node *node = expr();
 
+    // アセンブリの前半を出力する
     printf(".intel_syntax noprefix\n");
     printf(".globl main\n");
     printf("main:\n");
